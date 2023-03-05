@@ -1,4 +1,4 @@
-class CreateBookings < ActiveRecord::Migration[6.1]
+class CreateBookingsTable < ActiveRecord::Migration[6.1]
   def change
     create_table :bookings do |t|
       t.belongs_to :user, index: true
