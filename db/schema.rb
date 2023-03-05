@@ -10,40 +10,42 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_03_01_172445) do
-
-  create_table "apartments", force: :cascade do |t|
-    t.string "apartment_name"
-    t.string "image"
-    t.string "location"
-    t.integer "price"
-    t.integer "bedrooms"
-    t.integer "monthly_rent"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.boolean "is_booked", default: false
-  end
+ActiveRecord::Schema.define(version: 2023_03_05_103916) do
 
   create_table "bookings", force: :cascade do |t|
-    t.integer "user_id"
-    t.integer "apartment_id"
     t.date "start_date"
     t.date "end_date"
     t.string "payment_status"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["apartment_id"], name: "index_bookings_on_apartment_id"
-    t.index ["user_id"], name: "index_bookings_on_user_id"
+  end
+
+  create_table "owners", force: :cascade do |t|
+    t.string "name"
+    t.string "email"
+    t.integer "tel", limit: 8
+    t.string "password_digest"
+  end
+
+  create_table "rentals", force: :cascade do |t|
+    t.string "name"
+    t.string "description"
+    t.string "image"
+    t.string "location"
+    t.integer "price", limit: 8
+    t.integer "owner_id"
+    t.boolean "available"
+    t.integer "bookings", default: 0
   end
 
   create_table "reviews", force: :cascade do |t|
     t.integer "user_id"
-    t.integer "apartment_id"
+    t.integer "rental_id"
     t.integer "rating"
     t.text "comment"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["apartment_id"], name: "index_reviews_on_apartment_id"
+    t.index ["rental_id"], name: "index_reviews_on_rental_id"
     t.index ["user_id"], name: "index_reviews_on_user_id"
   end
 

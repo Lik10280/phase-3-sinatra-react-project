@@ -1,21 +1,51 @@
+require "faker"
+
 puts "🌱 Seeding spices..."
 
-# Seed your database here
-# Seed data for the User model
-User.create(firstname: "John", lastname: "Doe", username: "jdoe", email: "jdoe@example.com", password: "password123")
-User.create(firstname: "Jane", lastname: "Doe", username: "jane", email: "jane@example.com", password: "password456")
+puts "Destroying all data...."
 
-# Seed data for the Apartment model
-Apartment.create(apartment_name: "Cozy Studio", image: "https://example.com/cozy-studio.jpg", location: "123 Main St, Anytown, USA", price: 1000, bedrooms: 1, monthly_rent: 900)
-Apartment.create(apartment_name: "Spacious Loft", image: "https://example.com/spacious-loft.jpg", location: "456 Elm St, Anytown, USA", price: 2000, bedrooms: 2, monthly_rent: 1800)
+Owner.destroy_all
+Rental.destroy_all
+User.destroy_all
+Booking.destroy_all
+Review.destroy_all
 
-# Seed data for the Booking model
-Booking.create(start_date: Date.today, end_date: Date.today + 7, user_id: 1, apartment_id: 1, payment_status: "paid")
-Booking.create(start_date: Date.today + 14, end_date: Date.today + 21, user_id: 2, apartment_id: 2, payment_status: "pending")
+puts "Seeding Owners and Rentals..."
 
-# Seed data for the Review model
-Review.create(user_id: 1, apartment_id: 1, rating: 4, comment: "Great location, but could use some better amenities.")
-Review.create(user_id: 2, apartment_id: 2, rating: 5, comment: "Absolutely stunning loft! Will definitely be staying here again.")
+10.times do
+owner = Owner.create(
+name: Faker::Name.first_name,
+email: Faker::Internet.email,
+tel: Faker::PhoneNumber.cell_phone_in_e164,
+password: Faker::Internet.password(min_length: 8)
+)
 
+2.times do
+rental = Rental.create(
+name: Faker::Company.name,
+description: Faker::Lorem.paragraph(sentence_count:2),
+image: "https://ibb.co/pjRzP0P",
+location: Faker::Address.full_address,
+price: Faker::Commerce.price,
+available: true,
+owner_id: owner.id
+)
+
+end
+end
+
+puts "Seeding Users, Bookings and Reviews..."
+
+5.times do
+user = User.create(
+firstname: Faker::Name.first_name,
+lastname: Faker::Name.last_name,
+username: Faker::Internet.username,
+email: Faker::Internet.email,
+password: Faker::Internet.password(min_length: 8)
+)
+
+
+end
 
 puts "✅ Done seeding!"
