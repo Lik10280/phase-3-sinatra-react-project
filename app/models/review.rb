@@ -1,5 +1,4 @@
 class Review < ActiveRecord::Base
     belongs_to :user
-    belongs_to :apartment
+    belongs_to :rental
   end
-  
