@@ -6,6 +6,23 @@ class ApplicationController < Sinatra::Base
    rentals.to_json
  end
 
+ get '/owners' do
+  owners = Owner.all
+  owners.to_json
+ end
+
+ get '/rentals/:id/owner' do
+  # Find the rental based on the ID parameter
+  rental = Rental.find(params[:id])
+
+  # Retrieve the owner information for the rental
+  owner = rental.user
+
+  # Return the owner information as a JSON object
+  { name: owner.name, email: owner.email, tel: owner.tel }.to_json
+end
+
+
 # app.rb
 
 post '/rentals/:id/reviews' do
@@ -19,6 +36,17 @@ post '/rentals/:id/reviews' do
   end
 end
 
+get '/rentals/:rental_id/reviews' do
+  rental = Rental.find_by(id: params[:rental_id])
+  if rental
+    reviews = rental.reviews
+    reviews.to_json
+  else
+    halt 404, "Rental not found"
+  end
+end
+
+
 
 
  
@@ -30,21 +58,35 @@ end
    owners = Owner.all
    owners.to_json
  end 
+#  post '/signup' do
+#   user = User.new(params)
+#   if user.save
+#     session[:user_id] = user.id
+#     redirect '/'
+#   else
+#     redirect '/signup'
+#   end
+# end
+post '/users/signup' do
+  request_body = JSON.parse(request.body.read)
+  firstname = request_body['firstname']
+  lastname = request_body['lastname']
+  username = request_body['username']
+  email = request_body['email']
+  password = request_body['password']
 
- post '/users/signup' do
-   request_body = JSON.parse(request.body.read)
-   email = request_body['email']
-   password = request_body['password']
-   user = User.new(email: email, password: password)
-   if user.save
-   # Return a success response with the user data
-   user.to_json
-else
-   # Return an error response
-   status 400
-   { error: "Unable to create user" }.to_json
-   end
-   end
+  user = User.new(firstname: firstname, lastname: lastname, username: username, email: email, password: password)
+
+  if user.save
+    # Return a success response with the user data
+    user.to_json
+  else
+    # Return an error response
+    status 400
+    { error: "Unable to create user" }.to_json
+  end
+end
+
 
    post '/login' do
     email = params[:email]
