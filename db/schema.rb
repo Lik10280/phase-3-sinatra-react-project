@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_03_05_103916) do
+ActiveRecord::Schema.define(version: 2023_03_06_072827) do
 
   create_table "bookings", force: :cascade do |t|
     t.date "start_date"
@@ -36,6 +36,7 @@ ActiveRecord::Schema.define(version: 2023_03_05_103916) do
     t.integer "owner_id"
     t.boolean "available"
     t.integer "bookings", default: 0
+    t.integer "user_id"
   end
 
   create_table "reviews", force: :cascade do |t|
@@ -54,9 +55,10 @@ ActiveRecord::Schema.define(version: 2023_03_05_103916) do
     t.string "lastname"
     t.string "username"
     t.string "email"
-    t.string "password"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "password_digest"
   end
 
+  add_foreign_key "rentals", "users"
 end
