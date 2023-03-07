@@ -68,16 +68,10 @@ end
 #   end
 # end
 
-get '/owners/:owner_id/rentals' do
-  owner = Owner.find_by(id: params[:owner_id])
-
-  if owner
-    rentals = owner.rentals
-    rentals.to_json(include: :bookings)
-  else
-    status 404
-    { error: "Owner not found" }.to_json
-  end
+get '/rentals/:id/user' do
+  rental = Rental.find(params[:id])
+  user = User.joins(:rentals).where(rentals: { id: rental.id }).first
+  user.to_json
 end
 post '/users/signup' do
   request_body = JSON.parse(request.body.read)
